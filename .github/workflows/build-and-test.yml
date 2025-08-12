@@ -22,20 +22,13 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Configure (host tests)
-        run: |
-          cmake -S . -B build-host \
-            -G Ninja \
-            -DUNIT_TEST=ON \
-            -DUNIT_COVERAGE=ON
-          # NOTE:
-          #  -DUNIT_TEST toggles your CMake to build the unit test executable(s)
-          #  -DUNIT_COVERAGE should add --coverage or -fprofile-arcs -ftest-coverage to C/CXX/LD flags
+      - name: Configure unit tests (host)
+        run: cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug
 
       - name: Build unit tests
-        run: cmake --build build-host --config Debug --target unit_tests -j
+        run: cmake --build build-host --target unit_tests --parallel
 
-      - name: Run tests (CTest)
+      - name: Run unit tests
         run: ctest --test-dir build-host --output-on-failure
 
       - name: Coverage (gcovr)
