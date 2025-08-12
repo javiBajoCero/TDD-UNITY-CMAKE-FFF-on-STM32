@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "stm32g4xx_hal_flash.h": "c",
+        "selftest.h": "c",
+        "mapping_export.h": "c"
+    },
+    "cmake.cmakePath": "cube-cmake",
+    "cmake.configureArgs": [
+        "-DCMAKE_COMMAND=cube-cmake"
+    ],
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+}

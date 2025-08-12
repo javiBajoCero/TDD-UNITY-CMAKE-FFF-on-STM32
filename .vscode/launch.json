@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+        "name": "Debug (no full reset)",
+        "type": "cortex-debug",
+        "request": "launch",
+        "servertype": "stlink",  // you're using ST-LINK GDB server, not openocd
+        "executable": "build/${workspaceFolderBasename}.elf",
+        "device": "STM32U083RC",
+        "gdbPath": "arm-none-eabi-gdb",
+        "runToEntryPoint": "Reset_Handler",
+        "postLaunchCommands": [
+        "monitor halt",
+        "break main"
+        ],
+        "overrideLaunchCommands": [
+        "load"
+        ],
+      "showDevDebugOutput": "raw"
+    }
+  ]
+}

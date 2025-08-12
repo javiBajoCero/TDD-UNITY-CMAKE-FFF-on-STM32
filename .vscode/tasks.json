@@ -1,0 +1,16 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+    "label": "flash-userapp",
+    "type": "shell",
+    "command": "STM32_Programmer_CLI",
+    "args": [
+        "-c", "port=SWD",
+        "-w", "build/Debug/${workspaceFolderBasename}.elf", // or .hex or .bin
+        "-rst"
+    ],
+    "problemMatcher": []
+    }
+  ]
+}
