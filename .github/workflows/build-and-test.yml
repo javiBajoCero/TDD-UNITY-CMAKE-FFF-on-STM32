@@ -8,6 +8,10 @@ defaults:
   run:
     shell: bash
 
+permissions:
+    checks: write
+    contents: read
+    
 jobs:
   unit-tests:
     name: Unit tests (Unity + FFF run on linux C)
