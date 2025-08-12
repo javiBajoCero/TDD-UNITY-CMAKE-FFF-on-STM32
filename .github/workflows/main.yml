@@ -1,0 +1,118 @@
+name: CI (CMake + Unity + FFF + STM32)
+
+on:
+  push:
+  pull_request:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  unit-tests:
+    name: Host Unit Tests (Unity + FFF)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies (host)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            ninja-build \
+            git \
+            python3 \
+            gcovr \
+            lcov
+
+      - name: Configure (host tests)
+        run: |
+          cmake -S . -B build-host \
+            -G Ninja \
+            -DUNIT_TEST=ON \
+            -DUNIT_COVERAGE=ON
+          # NOTE:
+          #  -DUNIT_TEST toggles your CMake to build the unit test executable(s)
+          #  -DUNIT_COVERAGE should add --coverage or -fprofile-arcs -ftest-coverage to C/CXX/LD flags
+
+      - name: Build unit tests
+        run: cmake --build build-host --config Debug --target unit_tests -j
+
+      - name: Run tests (CTest)
+        run: ctest --test-dir build-host --output-on-failure
+
+      - name: Coverage (gcovr)
+        if: always()
+        run: |
+          gcovr -r . build-host \
+            --xml-pretty --xml coverage.xml \
+            --html-details coverage.html \
+            --exclude '.*third_party/.*' \
+            --exclude '.*tests/.*'
+          echo "Coverage report generated."
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-host
+          path: |
+            coverage.html
+            coverage.xml
+
+  firmware-build:
+    name: STM32 Cross Build (arm-none-eabi)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies (toolchain & flashing)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake \
+            ninja-build \
+            gcc-arm-none-eabi \
+            binutils-arm-none-eabi \
+            gdb-multiarch \
+            openocd \
+            stlink-tools \
+            dfu-util
+
+      - name: Configure (firmware)
+        run: |
+          # Adjust toolchain path if yours differs:
+          # e.g., toolchains/arm-none-eabi-gcc.cmake should set C and ASM compilers and flags
+          cmake -S . -B build-fw \
+            -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE=toolchains/arm-none-eabi-gcc.cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DUNIT_TEST=OFF
+
+      - name: Build firmware
+        run: cmake --build build-fw --config Release -j
+
+      - name: Package firmware artifacts
+        if: success()
+        run: |
+          mkdir -p artifacts
+          # Adjust these patterns/targets to match your project output names:
+          find build-fw -type f \( -name "*.elf" -o -name "*.bin" -o -name "*.hex" -o -name "*.map" \) -exec cp {} artifacts/ \;
+          echo "Collected firmware artifacts:"
+          ls -la artifacts
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-build
+          path: artifacts
