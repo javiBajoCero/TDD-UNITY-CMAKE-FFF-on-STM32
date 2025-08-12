@@ -10,7 +10,7 @@ defaults:
 
 jobs:
   unit-tests:
-    name: Host Unit Tests (Unity + FFF)
+    name: Unit tests (Unity + FFF run on linux C)
     runs-on: ubuntu-latest
 
     container:
@@ -51,7 +51,7 @@ jobs:
             coverage.xml
 
   firmware-build:
-    name: STM32 Cross Build (arm-none-eabi)
+    name: STM32 Cross compiling (arm-none-eabi)
     runs-on: ubuntu-latest
 
     container:
@@ -84,7 +84,7 @@ jobs:
       - name: Upload firmware artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${CMAKE_PROJECT_NAME}-${{ github.run_number }}
+          name: ${{ github.event.repository.name }}-${{ github.run_number }}
           path: |
             build/*.elf
           if-no-files-found: error
