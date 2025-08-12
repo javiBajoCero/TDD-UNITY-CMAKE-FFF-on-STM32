@@ -77,7 +77,7 @@ jobs:
           rm -rf build
 
           # Generate Makefiles
-          cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -B build --clean-first
+          cmake --fresh -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -B build 
 
           # Clean and build
           cd build
