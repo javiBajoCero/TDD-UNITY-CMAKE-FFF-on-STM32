@@ -86,9 +86,10 @@ jobs:
           ls
           cd ..
 
-
       - name: Upload firmware artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${CMAKE_PROJECT_NAME}
-          path: artifacts
+          name: ${CMAKE_PROJECT_NAME}-${{ github.run_number }}
+          path: |
+            build/*.elf
+          if-no-files-found: error
