@@ -56,7 +56,9 @@ jobs:
 
     container:
       image: javibajocero/stm32cubeclt-builder:1.19.0 # has arm tools
-      
+    
+    needs: unit-tests   # <-- depends on unit_tests job
+
     steps:
       - name: Checkout (with submodules)
         uses: actions/checkout@v4
