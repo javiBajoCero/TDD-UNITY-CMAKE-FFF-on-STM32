@@ -22,18 +22,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install dependencies (host)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            cmake \
-            ninja-build \
-            git \
-            python3 \
-            gcovr \
-            lcov
-
       - name: Configure (host tests)
         run: |
           cmake -S . -B build-host \
@@ -82,43 +70,25 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install dependencies (toolchain & flashing)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            cmake \
-            ninja-build \
-            gcc-arm-none-eabi \
-            binutils-arm-none-eabi \
-            gdb-multiarch \
-            openocd \
-            stlink-tools \
-            dfu-util
-
-      - name: Configure (firmware)
-        run: |
-          # Adjust toolchain path if yours differs:
-          # e.g., toolchains/arm-none-eabi-gcc.cmake should set C and ASM compilers and flags
-          cmake -S . -B build-fw \
-            -G Ninja \
-            -DCMAKE_TOOLCHAIN_FILE=toolchains/arm-none-eabi-gcc.cmake \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DUNIT_TEST=OFF
-
       - name: Build firmware
-        run: cmake --build build-fw --config Release -j
-
-      - name: Package firmware artifacts
-        if: success()
         run: |
-          mkdir -p artifacts
-          # Adjust these patterns/targets to match your project output names:
-          find build-fw -type f \( -name "*.elf" -o -name "*.bin" -o -name "*.hex" -o -name "*.map" \) -exec cp {} artifacts/ \;
-          echo "Collected firmware artifacts:"
-          ls -la artifacts
+          echo "🔧 Building firmware..."
+          # Remove existing build directory (clean start)
+          rm -rf build/Debug
+
+          # Generate Makefiles
+          cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -B build
+
+          # Clean and build
+          cd build
+          make clean
+          make -j$(nproc)  # builds with all CPU cores
+          ls
+          cd ..
+
 
       - name: Upload firmware artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: firmware-build
+          name: ${CMAKE_PROJECT_NAME}
           path: artifacts
