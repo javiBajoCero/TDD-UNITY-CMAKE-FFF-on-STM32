@@ -28,27 +28,14 @@ jobs:
       - name: Build unit tests
         run: cmake --build build-host --target unit_tests --parallel
 
-      - name: Run unit tests
-        run: ctest --test-dir build-host --output-on-failure
-
-      - name: Coverage (gcovr)
-        if: always()
-        run: |
-          gcovr -r . build-host \
-            --xml-pretty --xml coverage.xml \
-            --html-details coverage.html \
-            --exclude '.*third_party/.*' \
-            --exclude '.*tests/.*'
-          echo "Coverage report generated."
-
-      - name: Upload coverage report
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Run unit tests (JUnit output)
+        run: ctest --test-dir build-host --output-on-failure --no-compress-output -T Test --output-junit test-results.xml
+      
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
         with:
-          name: coverage-host
-          path: |
-            coverage.html
-            coverage.xml
+          files: build-host/test-results.xml
+
 
   firmware-build:
     name: STM32 Cross compiling (arm-none-eabi)
