@@ -13,6 +13,9 @@ jobs:
     name: Host Unit Tests (Unity + FFF)
     runs-on: ubuntu-latest
 
+    container:
+      image: javibajocero/stm32cubeclt-builder:1.19.0 # has arm tools
+
     steps:
       - name: Checkout (with submodules)
         uses: actions/checkout@v4
@@ -70,6 +73,9 @@ jobs:
     name: STM32 Cross Build (arm-none-eabi)
     runs-on: ubuntu-latest
 
+    container:
+      image: javibajocero/stm32cubeclt-builder:1.19.0 # has arm tools
+      
     steps:
       - name: Checkout (with submodules)
         uses: actions/checkout@v4
