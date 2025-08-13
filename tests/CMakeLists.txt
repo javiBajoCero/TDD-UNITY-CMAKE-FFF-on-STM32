@@ -6,7 +6,7 @@ set(TEST_SOURCES
   ${CMAKE_CURRENT_LIST_DIR}/unity/src/unity.c
 )
 
-add_executable(UnitTests${TEST_SOURCES})
+add_executable(UnitTests ${TEST_SOURCES})
 project(UnitTests C ASM)
 
 include(CTest)
