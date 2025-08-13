@@ -33,6 +33,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/unity/src
   ${CMAKE_CURRENT_LIST_DIR}/fff
   ${CMAKE_CURRENT_LIST_DIR}/Core
+  ${CMAKE_CURRENT_LIST_DIR}
+  ${CMAKE_CURRENT_LIST_DIR}/../UserCore
 )
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE UNITY_INCLUDE_CONFIG_H)
 
