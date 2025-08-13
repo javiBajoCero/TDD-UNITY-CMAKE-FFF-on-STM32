@@ -73,10 +73,25 @@ target_include_directories(unit_tests PRIVATE
 )
 
 # Inherit everything from the app target (device macro, includes, flags, ld, libs).
-if(APP_INCS)  target_include_directories(unit_tests PRIVATE ${APP_INCS}) endif()
-if(APP_DEFS)  target_compile_definitions(unit_tests PRIVATE ${APP_DEFS}) endif()
-if(APP_COPTS) target_compile_options(unit_tests PRIVATE ${APP_COPTS}) endif()
-if(APP_LOPTS) target_link_options(unit_tests PRIVATE ${APP_LOPTS}) endif()
-if(APP_LIBS)  target_link_libraries(unit_tests PRIVATE ${APP_LIBS}) endif()
+if(APP_INCS)
+  target_include_directories(unit_tests PRIVATE ${APP_INCS})
+endif()
+
+if(APP_DEFS)
+  target_compile_definitions(unit_tests PRIVATE ${APP_DEFS})
+endif()
+
+if(APP_COPTS)
+  target_compile_options(unit_tests PRIVATE ${APP_COPTS})
+endif()
+
+if(APP_LOPTS)
+  target_link_options(unit_tests PRIVATE ${APP_LOPTS})
+endif()
+
+if(APP_LIBS)
+  target_link_libraries(unit_tests PRIVATE ${APP_LIBS})
+endif()
+
 
 target_compile_features(unit_tests PRIVATE c_std_99)
