@@ -11,6 +11,13 @@ set(MX_Defines_Syms
 set(STARTUP_ASM ${CMAKE_CURRENT_LIST_DIR}/../startup_stm32u083xx.s)
 set(LD_SCRIPT   ${CMAKE_CURRENT_LIST_DIR}/../STM32U083xx_FLASH.ld)
 
+# Add linked libraries
+target_link_libraries(${CMAKE_PROJECT_NAME}
+    stm32cubemx
+
+    # Add user defined libraries
+)
+
 project(UnitTests C)
 
 include(CTest)
