@@ -13,7 +13,7 @@
 /* Private typedef -----------------------------------------------------------*/
 
 /* Prototypes of test functions implemented in your test_*.c files */
-extern void test_always_passes(void);
+
 /* Private define ------------------------------------------------------------*/
 
 
