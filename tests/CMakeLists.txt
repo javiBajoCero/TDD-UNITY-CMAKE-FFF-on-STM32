@@ -1,4 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
+
+# 1) Create the test exe FIRST — name must match what the subdir expects. Add Unity runner + unity.c; then add all CubeMX sources (except main.c).
+set(TEST_SOURCES
+  ${CMAKE_CURRENT_LIST_DIR}/Core/main.c
+  ${CMAKE_CURRENT_LIST_DIR}/unity/src/unity.c
+)
+
+add_executable(unit_tests ${TEST_SOURCES})
 project(UnitTests C ASM)
 
 include(CTest)
@@ -55,13 +63,6 @@ foreach(s ${APP_SRCS})
   list(APPEND FILTERED_APP_SRCS ${s})
 endforeach()
 
-# 4) Add Unity runner + unity.c; then add all CubeMX sources (except main.c).
-set(TEST_SOURCES
-  ${CMAKE_CURRENT_LIST_DIR}/Core/main.c
-  ${CMAKE_CURRENT_LIST_DIR}/unity/src/unity.c
-)
-
-add_executable(unit_tests ${TEST_SOURCES})
 target_sources(unit_tests PRIVATE ${FILTERED_APP_SRCS})
 
 # Unity config (optional): put unity_config.h in tests/Core and enable this.
