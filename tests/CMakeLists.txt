@@ -26,6 +26,7 @@ set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY SOURCES "${_filtered_srcs}")
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/Core/main.c          # your Unity test runner main
   ${CMAKE_CURRENT_LIST_DIR}/unity/src/unity.c
+  ${CMAKE_CURRENT_LIST_DIR}/Core/test_wolksvagen.c
 )
 
 # 5) Test-specific includes/defs

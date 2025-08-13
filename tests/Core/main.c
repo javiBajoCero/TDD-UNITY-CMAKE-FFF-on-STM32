@@ -9,10 +9,11 @@
 
 #include "ledDriver.h"
 #include "unity.h"
-
+#include "test_wolksvagen.h"
 /* Private typedef -----------------------------------------------------------*/
 
-
+/* Prototypes of test functions implemented in your test_*.c files */
+extern void test_always_passes(void);
 /* Private define ------------------------------------------------------------*/
 
 
@@ -53,8 +54,7 @@ int main(void)
     UNITY_OUTPUT_CHAR('\n'); UNITY_OUTPUT_CHAR('\r');
 
     UNITY_BEGIN();
-    RUN_TEST(test_crc_initial_value);
-    RUN_TEST(test_can_encode_classic_frame);
+    RUN_TEST(test_always_passes);
     // ...add more RUN_TEST()s or generate this list
     int failures = UNITY_END();
 
