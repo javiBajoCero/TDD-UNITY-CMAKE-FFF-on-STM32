@@ -18,6 +18,8 @@ target_include_directories(unit_tests PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/fff
 
     ${CMAKE_CURRENT_LIST_DIR}/../UserCore
+    ${CMAKE_CURRENT_LIST_DIR}/../Core/Inc
+    ${CMAKE_CURRENT_LIST_DIR}/../Core/src
 )
 
 target_compile_features(unit_tests PRIVATE c_std_99)
