@@ -38,6 +38,14 @@ jobs:
       - name: Build unit tests
         run: cmake --build build-tests --target UnitTests --config Debug -j
 
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: UnitTests-${{ github.event.repository.name }}-${{ github.run_number }}
+          path: |
+            build-tests/*.elf
+          if-no-files-found: error
+
 
   firmware-build:
     name: STM32 Cross compiling (arm-none-eabi)
