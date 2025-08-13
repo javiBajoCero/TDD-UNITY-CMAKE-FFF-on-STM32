@@ -15,18 +15,18 @@ add_executable(unit_tests ${TEST_SOURCES})
 
 
 ##recursively adding the Drivers rabbithole of subdirectories
-file(GLOB_RECURSE DRIVER_INCLUDE_DIRS
+file(GLOB_RECURSE DRIVERS_INCLUDE_DIRS
      LIST_DIRECTORIES true
      CONFIGURE_DEPENDS
-     "${CMAKE_CURRENT_LIST_DIR}/../Driver/*")
+     "${CMAKE_CURRENT_LIST_DIR}/../Drivers/*")
 
 # Keep only directories
-foreach(p ${DRIVER_INCLUDE_DIRS})
+foreach(p ${DRIVERS_INCLUDE_DIRS})
   if(NOT IS_DIRECTORY "${p}")
-    list(REMOVE_ITEM DRIVER_INCLUDE_DIRS "${p}")
+    list(REMOVE_ITEM DRIVERS_INCLUDE_DIRS "${p}")
   endif()
 endforeach()
-list(REMOVE_DUPLICATES DRIVER_INCLUDE_DIRS)
+list(REMOVE_DUPLICATES DRIVERS_INCLUDE_DIRS)
 
 
 
@@ -38,7 +38,7 @@ target_include_directories(unit_tests PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/../Core/Inc
     ${CMAKE_CURRENT_LIST_DIR}/../Core/src
 
-    ${DRIVER_INCLUDE_DIRS}
+    ${DRIVERS_INCLUDE_DIRS}
 )
 
 target_compile_features(unit_tests PRIVATE c_std_99)
