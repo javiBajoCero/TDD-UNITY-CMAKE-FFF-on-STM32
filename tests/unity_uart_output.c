@@ -1,6 +1,6 @@
 // unity_uart_output.c
-#include "main.h"
-#include "unity.h"           // pulls in unity_config.h
+#include "unity_uart_output.h"
+
 extern UART_HandleTypeDef huart2; // or your chosen UART
 
 void unity_uart_putc(int c)
