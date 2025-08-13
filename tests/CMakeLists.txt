@@ -1,42 +1,82 @@
 cmake_minimum_required(VERSION 3.16)
-
-set(MX_Defines_Syms 
-	USE_NUCLEO_64 
-	USE_HAL_DRIVER 
-	STM32U083xx
-    $<$<CONFIG:Debug>:DEBUG>
-)
-
-# Startup + linker (match your CubeMX output names/paths)
-set(STARTUP_ASM ${CMAKE_CURRENT_LIST_DIR}/../startup_stm32u083xx.s)
-set(LD_SCRIPT   ${CMAKE_CURRENT_LIST_DIR}/../STM32U083xx_FLASH.ld)
-
-project(UnitTests C)
+project(UnitTests C ASM)
 
 include(CTest)
 enable_testing()
 
-set(TEST_SOURCES
-    ${CMAKE_CURRENT_LIST_DIR}/Core/main.c
+# 1) Bring in your existing CubeMX CMake project (read-only).
+#    This is the CMake that already sets device macro, HAL/CMSIS includes,
+#    startup, linker script, optimization flags, etc.
+set(CUBEMX_DIR ${CMAKE_SOURCE_DIR}/../cmake/stm32cubemx)
+add_subdirectory(${CUBEMX_DIR} ${CMAKE_BINARY_DIR}/stm32cubemx EXCLUDE_FROM_ALL)
 
-    ${CMAKE_CURRENT_LIST_DIR}/unity/src/unity.c
+# 2) Find the app executable target from that subdir.
+#    You can skip auto-detect and pass -DAPP_TARGET=<name> to cmake if you want.
+if(NOT DEFINED APP_TARGET)
+  get_property(_allTargets GLOBAL PROPERTY TARGETS)
+  foreach(t ${_allTargets})
+    get_target_property(_type ${t} TYPE)
+    if(NOT _type STREQUAL "EXECUTABLE")
+      continue()
+    endif()
+    # Heuristic: the CubeMX app usually has a Core/Src/main.c
+    get_target_property(_srcs ${t} SOURCES)
+    foreach(s ${_srcs})
+      if(s MATCHES ".*/Core/Src/main\\.c$")
+        set(APP_TARGET ${t})
+        break()
+      endif()
+    endforeach()
+    if(APP_TARGET)
+      break()
+    endif()
+  endforeach()
+  if(NOT APP_TARGET)
+    message(FATAL_ERROR "Could not auto-detect CubeMX app target. Pass -DAPP_TARGET=<name> to cmake.")
+  endif()
+endif()
+message(STATUS "Using CubeMX app target: ${APP_TARGET}")
+
+# 3) Mirror the app target's configuration.
+get_target_property(APP_SRCS  ${APP_TARGET} SOURCES)
+get_target_property(APP_INCS  ${APP_TARGET} INCLUDE_DIRECTORIES)
+get_target_property(APP_DEFS  ${APP_TARGET} COMPILE_DEFINITIONS)
+get_target_property(APP_COPTS ${APP_TARGET} COMPILE_OPTIONS)
+get_target_property(APP_LOPTS ${APP_TARGET} LINK_OPTIONS)
+get_target_property(APP_LIBS  ${APP_TARGET} LINK_LIBRARIES)
+
+# Remove the app's main.c; our Unity main will be the entry.
+set(FILTERED_APP_SRCS "")
+foreach(s ${APP_SRCS})
+  get_filename_component(n ${s} NAME)
+  if(n MATCHES "^main\\.c$")
+    continue()
+  endif()
+  list(APPEND FILTERED_APP_SRCS ${s})
+endforeach()
+
+# 4) Add Unity runner + unity.c; then add all CubeMX sources (except main.c).
+set(TEST_SOURCES
+  ${CMAKE_CURRENT_LIST_DIR}/Core/main.c
+  ${CMAKE_CURRENT_LIST_DIR}/unity/src/unity.c
 )
 
 add_executable(unit_tests ${TEST_SOURCES})
+target_sources(unit_tests PRIVATE ${FILTERED_APP_SRCS})
 
+# Unity config (optional): put unity_config.h in tests/Core and enable this.
+target_compile_definitions(unit_tests PRIVATE UNITY_INCLUDE_CONFIG_H)
 target_include_directories(unit_tests PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/unity/src
-    ${CMAKE_CURRENT_LIST_DIR}/fff
-
-    ${CMAKE_CURRENT_LIST_DIR}/../UserCore
-    ${CMAKE_CURRENT_LIST_DIR}/../Core/Inc
-    ${CMAKE_CURRENT_LIST_DIR}/../Core/src
-
-    ${CMAKE_CURRENT_LIST_DIR}/../Drivers/STM32U0xx_HAL_Driver/Src
-    ${CMAKE_CURRENT_LIST_DIR}/../Drivers/STM32U0xx_HAL_Driver/Inc
-    ${CMAKE_CURRENT_LIST_DIR}/../Drivers/BSP/STM32U0xx_Nucleo
+  ${CMAKE_CURRENT_LIST_DIR}/unity/src
+  ${CMAKE_CURRENT_LIST_DIR}/fff
+  ${CMAKE_CURRENT_LIST_DIR}/Core
 )
 
-target_compile_features(unit_tests PRIVATE c_std_99)
+# Inherit everything from the app target (device macro, includes, flags, ld, libs).
+if(APP_INCS)  target_include_directories(unit_tests PRIVATE ${APP_INCS}) endif()
+if(APP_DEFS)  target_compile_definitions(unit_tests PRIVATE ${APP_DEFS}) endif()
+if(APP_COPTS) target_compile_options(unit_tests PRIVATE ${APP_COPTS}) endif()
+if(APP_LOPTS) target_link_options(unit_tests PRIVATE ${APP_LOPTS}) endif()
+if(APP_LIBS)  target_link_libraries(unit_tests PRIVATE ${APP_LIBS}) endif()
 
-add_test(NAME unit_tests COMMAND unit_tests)
+target_compile_features(unit_tests PRIVATE c_std_99)
