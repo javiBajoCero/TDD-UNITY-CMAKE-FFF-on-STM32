@@ -60,6 +60,8 @@ int main(void)
 
     // Optionally blink or breakpoint on failures
     for(;;) { /* stay here; or NVIC_SystemReset(); */ }
+
+    return failures;
 }
 
 
@@ -135,3 +137,7 @@ void assert_failed(uint8_t *file, uint32_t line)
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 }
 #endif /* USE_FULL_ASSERT */
+
+//Stubs (Unity expects them, even if empty).
+void setUp(void) {}
+void tearDown(void) {}

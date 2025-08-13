@@ -24,7 +24,8 @@ set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY SOURCES "${_filtered_srcs}")
 
 # 4) Add Unity runner and unity.c
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-  ${CMAKE_CURRENT_LIST_DIR}/Core/main.c          # your Unity test runner main
+  ${CMAKE_CURRENT_LIST_DIR}/Core/main.c               # your Unity test runner main
+  ${CMAKE_CURRENT_LIST_DIR}/Core/unity_uart_output.c
   ${CMAKE_CURRENT_LIST_DIR}/unity/src/unity.c
   ${CMAKE_CURRENT_LIST_DIR}/Core/test_wolksvagen.c
 )
