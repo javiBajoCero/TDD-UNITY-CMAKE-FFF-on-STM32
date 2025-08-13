@@ -35,11 +35,10 @@ jobs:
       - name: Run unit tests (JUnit output)
         run: ctest --test-dir build-host --output-on-failure --no-compress-output -T Test --output-junit test-results.xml
       
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+      - name: Test Summary
+        uses: test-summary/action@v2.3
         with:
-          files: build-host/test-results.xml
-
+          paths: "build-host/test-results.xml"
 
   firmware-build:
     name: STM32 Cross compiling (arm-none-eabi)
