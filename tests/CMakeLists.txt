@@ -4,36 +4,9 @@ project(UnitTests C ASM)
 include(CTest)
 enable_testing()
 
-
-
 # 1) Create the executable target *first*. Name must match ${CMAKE_PROJECT_NAME}.
 #    Leave it empty so the CubeMX subdir can add its sources.
 add_executable(${CMAKE_PROJECT_NAME} "")
-
-# Clean up any bad/duplicate -T added elsewhere
-foreach(var CMAKE_EXE_LINKER_FLAGS CMAKE_C_LINK_FLAGS)
-  if(DEFINED ${var})
-    string(REGEX REPLACE "(^| )-T[^ ]+" "" _cleaned "${${var}}")
-    set(${var} "${_cleaned}" CACHE STRING "" FORCE)
-  endif()
-endforeach()
-
-# Make sure CPU/Thumb flags are proper list items (no string glue)
-target_compile_options(UnitTests PRIVATE
-  -mcpu=cortex-m0plus
-  -mthumb
-)
-
-# Known-good link options as list items (note correct case: -Wl and -T)
-target_link_options(UnitTests PRIVATE
-  -mcpu=cortex-m0plus
-  -mthumb
-  --specs=nano.specs
-  -Wl,-Map=UnitTests.map
-  -Wl,--gc-sections
-  -Wl,--print-memory-usage
-  -T${CMAKE_CURRENT_LIST_DIR}/../STM32U083xx_FLASH.ld
-)
 
 # 2) Bring in the CubeMX cmake which will add HAL/CMSIS sources and link flags to our target.
 set(CUBEMX_DIR ${CMAKE_SOURCE_DIR}/../cmake/stm32cubemx)
@@ -56,8 +29,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/Core/test_wolksvagen.c
 )
 
-# Remove any -T that points to tests/
-string(REGEX REPLACE " *-T\"?[^\"]+\"?" "" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
+
 
 # Add the correct absolute path (tests/.. is repo root)
 set(_ld "${CMAKE_CURRENT_SOURCE_DIR}/../STM32U083xx_FLASH.ld")
