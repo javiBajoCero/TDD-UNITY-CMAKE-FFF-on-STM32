@@ -42,9 +42,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_LPUART1_UART_Init();
-  /* USER CODE BEGIN 2 */
-
-  /* USER CODE END 2 */
 
   /* Initialize leds */
   BSP_LED_Init(LED_GREEN);
@@ -52,8 +49,6 @@ int main(void)
   /* Initialize USER push-button, will be used to trigger an interrupt each time it's pressed.*/
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
     // Optional: small banner so your PC script knows tests started
     UNITY_OUTPUT_CHAR('\n'); UNITY_OUTPUT_CHAR('\r');
 
