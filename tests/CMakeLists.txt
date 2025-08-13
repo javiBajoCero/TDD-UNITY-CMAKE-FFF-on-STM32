@@ -33,6 +33,7 @@ target_include_directories(unit_tests PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/../Core/src
 
     ${CMAKE_CURRENT_LIST_DIR}/../Drivers/STM32U0xx_HAL_Driver/Src
+    ${CMAKE_CURRENT_LIST_DIR}/../Drivers/STM32U0xx_HAL_Driver/Inc
     ${CMAKE_CURRENT_LIST_DIR}/../Drivers/BSP/STM32U0xx_Nucleo
 )
 
