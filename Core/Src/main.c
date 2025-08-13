@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "ledDriver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -100,10 +100,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-  HAL_Delay(100);
-  BSP_LED_On(LED_GREEN);
-  HAL_Delay(100);
-  BSP_LED_Off(LED_GREEN);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
