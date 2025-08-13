@@ -14,7 +14,7 @@ set(TEST_SOURCES
 add_executable(unit_tests ${TEST_SOURCES})
 
 file(GLOB_RECURSE DRIVER_INCLUDE_DIRS
-    ${CMAKE_CURRENT_LIST_DIR}/Driver/*
+    ${CMAKE_CURRENT_LIST_DIR}/../Driver/*
 )
 
 target_include_directories(unit_tests PRIVATE
