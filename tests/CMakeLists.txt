@@ -7,6 +7,10 @@ set(MX_Defines_Syms
     $<$<CONFIG:Debug>:DEBUG>
 )
 
+# Startup + linker (match your CubeMX output names/paths)
+set(STARTUP_ASM ${CMAKE_CURRENT_LIST_DIR}/../startup_stm32u083xx.s)
+set(LD_SCRIPT   ${CMAKE_CURRENT_LIST_DIR}/../STM32U083xx_FLASH.ld)
+
 project(UnitTests C)
 
 include(CTest)
