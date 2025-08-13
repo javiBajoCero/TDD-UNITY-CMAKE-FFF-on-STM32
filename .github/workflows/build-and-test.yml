@@ -32,7 +32,6 @@ jobs:
             -G "Unix Makefiles" \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_TOOLCHAIN_FILE="$GITHUB_WORKSPACE/cmake/gcc-arm-none-eabi.cmake" \
-            -DCMAKE_VERBOSE_MAKEFILE=ON
 
 
       - name: Build unit tests
@@ -68,8 +67,11 @@ jobs:
           # Remove existing build directory (clean start)
           rm -rf build
 
-          # Generate Makefiles
-          cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -B build 
+          # Configure with the ARM toolchain (same as unit tests)
+          cmake -S . -B build \
+            -G "Unix Makefiles" \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_TOOLCHAIN_FILE="$GITHUB_WORKSPACE/cmake/gcc-arm-none-eabi.cmake" \
 
           # Clean and build
           cd build
