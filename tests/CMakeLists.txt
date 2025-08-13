@@ -1,128 +1,43 @@
 cmake_minimum_required(VERSION 3.16)
-
-# 1) Create the test exe FIRST — name must match what the subdir expects. Add Unity runner + unity.c; then add all CubeMX sources (except main.c).
-set(TEST_SOURCES
-  ${CMAKE_CURRENT_LIST_DIR}/Core/main.c
-  ${CMAKE_CURRENT_LIST_DIR}/unity/src/unity.c
-)
-
-add_executable(UnitTests ${TEST_SOURCES})
 project(UnitTests C ASM)
 
 include(CTest)
 enable_testing()
 
-# 1) Bring in your existing CubeMX CMake project (read-only).
-#    This is the CMake that already sets device macro, HAL/CMSIS includes,
-#    startup, linker script, optimization flags, etc.
+# 1) Create the executable target *first*. Name must match ${CMAKE_PROJECT_NAME}.
+#    Leave it empty so the CubeMX subdir can add its sources.
+add_executable(${CMAKE_PROJECT_NAME} "")
+
+# 2) Bring in the CubeMX cmake which will add HAL/CMSIS sources and link flags to our target.
 set(CUBEMX_DIR ${CMAKE_SOURCE_DIR}/../cmake/stm32cubemx)
 add_subdirectory(${CUBEMX_DIR} ${CMAKE_BINARY_DIR}/stm32cubemx EXCLUDE_FROM_ALL)
 
-# 2) Find the app executable target from the CubeMX subdir.
-if(NOT DEFINED APP_TARGET)
-  # Prefer a target that has Core/Src/main.c or Core/src/main.c
-  set(_found "")
-  get_property(_allTargets GLOBAL PROPERTY TARGETS)
-  foreach(t ${_allTargets})
-    get_target_property(_type ${t} TYPE)
-    if(NOT _type STREQUAL "EXECUTABLE")
-      continue()
-    endif()
-    get_target_property(_srcs ${t} SOURCES)
-    foreach(s ${_srcs})
-      if(s MATCHES ".*/Core/[Ss]rc/main\\.c$")
-        set(_found ${t})
-        break()
-      endif()
-    endforeach()
-    if(_found)
-      break()
-    endif()
-  endforeach()
-
-  # If not found by heuristic, see what executables were added by the CubeMX dir
-  if(NOT _found)
-    # Collect exe targets defined in the CubeMX source dir
-    get_directory_property(_cubeTargets DIRECTORY ${CUBEMX_DIR} BUILDSYSTEM_TARGETS)
-    set(_cubeExes "")
-    foreach(t ${_cubeTargets})
-      get_target_property(_type ${t} TYPE)
-      if(_type STREQUAL "EXECUTABLE")
-        list(APPEND _cubeExes ${t})
-      endif()
-    endforeach()
-    list(LENGTH _cubeExes _nexes)
-    if(_nexes EQUAL 1)
-      list(GET _cubeExes 0 _found)
-    endif()
+# 3) Remove CubeMX's app main.c from the target (we will use Unity's main instead).
+get_target_property(_app_srcs ${CMAKE_PROJECT_NAME} SOURCES)
+set(_filtered_srcs ${_app_srcs})
+foreach(s IN LISTS _app_srcs)
+  if(s MATCHES "/Core/Src/main\\.c$")
+    list(REMOVE_ITEM _filtered_srcs "${s}")
   endif()
-
-  if(_found)
-    set(APP_TARGET ${_found})
-  else()
-    # Last resort: show what we saw and fail with a clear hint
-    message(STATUS "Could not auto-detect the CubeMX app target.")
-    message(STATUS "Hint: pass -DAPP_TARGET=<name>. Executable targets seen:")
-    foreach(t ${_allTargets})
-      get_target_property(_type ${t} TYPE)
-      if(_type STREQUAL "EXECUTABLE")
-        message(STATUS "  - ${t}")
-      endif()
-    endforeach()
-    message(FATAL_ERROR "Could not auto-detect CubeMX app target. Pass -DAPP_TARGET=<name> to cmake.")
-  endif()
-endif()
-message(STATUS "Using CubeMX app target: ${APP_TARGET}")
-
-
-# 3) Mirror the app target's configuration.
-get_target_property(APP_SRCS  ${APP_TARGET} SOURCES)
-get_target_property(APP_INCS  ${APP_TARGET} INCLUDE_DIRECTORIES)
-get_target_property(APP_DEFS  ${APP_TARGET} COMPILE_DEFINITIONS)
-get_target_property(APP_COPTS ${APP_TARGET} COMPILE_OPTIONS)
-get_target_property(APP_LOPTS ${APP_TARGET} LINK_OPTIONS)
-get_target_property(APP_LIBS  ${APP_TARGET} LINK_LIBRARIES)
-
-# Remove the app's main.c; our Unity main will be the entry.
-set(FILTERED_APP_SRCS "")
-foreach(s ${APP_SRCS})
-  get_filename_component(n ${s} NAME)
-  if(n MATCHES "^main\\.c$")
-    continue()
-  endif()
-  list(APPEND FILTERED_APP_SRCS ${s})
 endforeach()
+set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY SOURCES "${_filtered_srcs}")
 
-target_sources(UnitTestsPRIVATE ${FILTERED_APP_SRCS})
+# 4) Add Unity runner and unity.c
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+  ${CMAKE_CURRENT_LIST_DIR}/Core/main.c          # your Unity test runner main
+  ${CMAKE_CURRENT_LIST_DIR}/unity/src/unity.c
+)
 
-# Unity config (optional): put unity_config.h in tests/Core and enable this.
-target_compile_definitions(UnitTests PRIVATE UNITY_INCLUDE_CONFIG_H)
-target_include_directories(UnitTests PRIVATE
+# 5) Test-specific includes/defs
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/unity/src
   ${CMAKE_CURRENT_LIST_DIR}/fff
   ${CMAKE_CURRENT_LIST_DIR}/Core
 )
+target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE UNITY_INCLUDE_CONFIG_H)
 
-# Inherit everything from the app target (device macro, includes, flags, ld, libs).
-if(APP_INCS)
-  target_include_directories(UnitTests PRIVATE ${APP_INCS})
-endif()
+# Usual C standard
+target_compile_features(${CMAKE_PROJECT_NAME} PRIVATE c_std_99)
 
-if(APP_DEFS)
-  target_compile_definitions(UnitTests PRIVATE ${APP_DEFS})
-endif()
-
-if(APP_COPTS)
-  target_compile_options(UnitTests PRIVATE ${APP_COPTS})
-endif()
-
-if(APP_LOPTS)
-  target_link_options(UnitTests PRIVATE ${APP_LOPTS})
-endif()
-
-if(APP_LIBS)
-  target_link_libraries(UnitTests PRIVATE ${APP_LIBS})
-endif()
-
-
-target_compile_features(UnitTests PRIVATE c_std_99)
+# Register the test exe (it will be the same ${CMAKE_PROJECT_NAME})
+add_test(NAME unit_tests COMMAND ${CMAKE_PROJECT_NAME})
