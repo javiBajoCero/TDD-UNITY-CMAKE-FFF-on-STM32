@@ -29,7 +29,7 @@ jobs:
       - name: Configure unit tests
         run: cmake -S tests -B build-tests \
              -DCMAKE_BUILD_TYPE=Debug \
-             -DCMAKE_TOOLCHAIN_FILE=../cmake/gcc-arm-none-eabi.cmake
+             -DCMAKE_TOOLCHAIN_FILE=/cmake/gcc-arm-none-eabi.cmake
              # If auto-detect fails or picks the wrong app:
              #   add -DAPP_TARGET=<your CubeMX exe target name>
 
