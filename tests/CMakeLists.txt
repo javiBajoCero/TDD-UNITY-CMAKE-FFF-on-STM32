@@ -29,7 +29,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/Core/test_wolksvagen.c
 )
 
-
+# Remove any -T that points to tests/
+string(REGEX REPLACE " *-T\"?[^\"]+\"?" "" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
 
 # Add the correct absolute path (tests/.. is repo root)
 set(_ld "${CMAKE_CURRENT_SOURCE_DIR}/../STM32U083xx_FLASH.ld")
