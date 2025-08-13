@@ -6,7 +6,7 @@ set(TEST_SOURCES
   ${CMAKE_CURRENT_LIST_DIR}/unity/src/unity.c
 )
 
-add_executable(unit_tests ${TEST_SOURCES})
+add_executable(UnitTests${TEST_SOURCES})
 project(UnitTests C ASM)
 
 include(CTest)
@@ -63,11 +63,11 @@ foreach(s ${APP_SRCS})
   list(APPEND FILTERED_APP_SRCS ${s})
 endforeach()
 
-target_sources(unit_tests PRIVATE ${FILTERED_APP_SRCS})
+target_sources(UnitTestsPRIVATE ${FILTERED_APP_SRCS})
 
 # Unity config (optional): put unity_config.h in tests/Core and enable this.
-target_compile_definitions(unit_tests PRIVATE UNITY_INCLUDE_CONFIG_H)
-target_include_directories(unit_tests PRIVATE
+target_compile_definitions(UnitTests PRIVATE UNITY_INCLUDE_CONFIG_H)
+target_include_directories(UnitTests PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/unity/src
   ${CMAKE_CURRENT_LIST_DIR}/fff
   ${CMAKE_CURRENT_LIST_DIR}/Core
@@ -75,24 +75,24 @@ target_include_directories(unit_tests PRIVATE
 
 # Inherit everything from the app target (device macro, includes, flags, ld, libs).
 if(APP_INCS)
-  target_include_directories(unit_tests PRIVATE ${APP_INCS})
+  target_include_directories(UnitTests PRIVATE ${APP_INCS})
 endif()
 
 if(APP_DEFS)
-  target_compile_definitions(unit_tests PRIVATE ${APP_DEFS})
+  target_compile_definitions(UnitTests PRIVATE ${APP_DEFS})
 endif()
 
 if(APP_COPTS)
-  target_compile_options(unit_tests PRIVATE ${APP_COPTS})
+  target_compile_options(UnitTests PRIVATE ${APP_COPTS})
 endif()
 
 if(APP_LOPTS)
-  target_link_options(unit_tests PRIVATE ${APP_LOPTS})
+  target_link_options(UnitTests PRIVATE ${APP_LOPTS})
 endif()
 
 if(APP_LIBS)
-  target_link_libraries(unit_tests PRIVATE ${APP_LIBS})
+  target_link_libraries(UnitTests PRIVATE ${APP_LIBS})
 endif()
 
 
-target_compile_features(unit_tests PRIVATE c_std_99)
+target_compile_features(UnitTests PRIVATE c_std_99)
