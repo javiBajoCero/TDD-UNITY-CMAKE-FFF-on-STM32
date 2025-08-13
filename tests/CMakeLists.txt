@@ -13,6 +13,10 @@ set(TEST_SOURCES
 
 add_executable(unit_tests ${TEST_SOURCES})
 
+file(GLOB_RECURSE DRIVER_INCLUDE_DIRS
+    ${CMAKE_CURRENT_LIST_DIR}/Driver/*
+)
+
 target_include_directories(unit_tests PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/unity/src
     ${CMAKE_CURRENT_LIST_DIR}/fff
@@ -20,6 +24,8 @@ target_include_directories(unit_tests PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/../UserCore
     ${CMAKE_CURRENT_LIST_DIR}/../Core/Inc
     ${CMAKE_CURRENT_LIST_DIR}/../Core/src
+
+    ${DRIVER_INCLUDE_DIRS}
 )
 
 target_compile_features(unit_tests PRIVATE c_std_99)
