@@ -18,32 +18,62 @@ enable_testing()
 set(CUBEMX_DIR ${CMAKE_SOURCE_DIR}/../cmake/stm32cubemx)
 add_subdirectory(${CUBEMX_DIR} ${CMAKE_BINARY_DIR}/stm32cubemx EXCLUDE_FROM_ALL)
 
-# 2) Find the app executable target from that subdir.
-#    You can skip auto-detect and pass -DAPP_TARGET=<name> to cmake if you want.
+# 2) Find the app executable target from the CubeMX subdir.
 if(NOT DEFINED APP_TARGET)
+  # Prefer a target that has Core/Src/main.c or Core/src/main.c
+  set(_found "")
   get_property(_allTargets GLOBAL PROPERTY TARGETS)
   foreach(t ${_allTargets})
     get_target_property(_type ${t} TYPE)
     if(NOT _type STREQUAL "EXECUTABLE")
       continue()
     endif()
-    # Heuristic: the CubeMX app usually has a Core/Src/main.c
     get_target_property(_srcs ${t} SOURCES)
     foreach(s ${_srcs})
-      if(s MATCHES ".*/Core/Src/main\\.c$")
-        set(APP_TARGET ${t})
+      if(s MATCHES ".*/Core/[Ss]rc/main\\.c$")
+        set(_found ${t})
         break()
       endif()
     endforeach()
-    if(APP_TARGET)
+    if(_found)
       break()
     endif()
   endforeach()
-  if(NOT APP_TARGET)
+
+  # If not found by heuristic, see what executables were added by the CubeMX dir
+  if(NOT _found)
+    # Collect exe targets defined in the CubeMX source dir
+    get_directory_property(_cubeTargets DIRECTORY ${CUBEMX_DIR} BUILDSYSTEM_TARGETS)
+    set(_cubeExes "")
+    foreach(t ${_cubeTargets})
+      get_target_property(_type ${t} TYPE)
+      if(_type STREQUAL "EXECUTABLE")
+        list(APPEND _cubeExes ${t})
+      endif()
+    endforeach()
+    list(LENGTH _cubeExes _nexes)
+    if(_nexes EQUAL 1)
+      list(GET _cubeExes 0 _found)
+    endif()
+  endif()
+
+  if(_found)
+    set(APP_TARGET ${_found})
+  else()
+    # Last resort: show what we saw and fail with a clear hint
+    message(STATUS "Could not auto-detect the CubeMX app target.")
+    message(STATUS "Hint: pass -DAPP_TARGET=<name>. Executable targets seen:")
+    foreach(t ${_allTargets})
+      get_target_property(_type ${t} TYPE)
+      if(_type STREQUAL "EXECUTABLE")
+        message(STATUS "  - ${t}")
+      endif()
+    endforeach()
     message(FATAL_ERROR "Could not auto-detect CubeMX app target. Pass -DAPP_TARGET=<name> to cmake.")
   endif()
 endif()
 message(STATUS "Using CubeMX app target: ${APP_TARGET}")
+
 
 # 3) Mirror the app target's configuration.
 get_target_property(APP_SRCS  ${APP_TARGET} SOURCES)
