@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"C:/Users/JavierMunozSaez/Documents/GitHub/TDD-UNITY-CMAKE-FFF-on-STM32/build/cmake_install.cmake",
-		"C:/Users/JavierMunozSaez/Documents/GitHub/TDD-UNITY-CMAKE-FFF-on-STM32/build/cmake/stm32cubemx/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
