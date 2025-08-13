@@ -1,4 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
+
+set(MX_Defines_Syms 
+	USE_NUCLEO_64 
+	USE_HAL_DRIVER 
+	STM32U083xx
+    $<$<CONFIG:Debug>:DEBUG>
+)
+
 project(UnitTests C)
 
 include(CTest)
