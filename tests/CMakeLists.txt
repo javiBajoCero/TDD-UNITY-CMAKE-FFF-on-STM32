@@ -13,9 +13,22 @@ set(TEST_SOURCES
 
 add_executable(unit_tests ${TEST_SOURCES})
 
+
+##recursively adding the Drivers rabbithole of subdirectories
 file(GLOB_RECURSE DRIVER_INCLUDE_DIRS
-    ${CMAKE_CURRENT_LIST_DIR}/../Driver/*
-)
+     LIST_DIRECTORIES true
+     CONFIGURE_DEPENDS
+     "${CMAKE_CURRENT_LIST_DIR}/../Driver/*")
+
+# Keep only directories
+foreach(p ${DRIVER_INCLUDE_DIRS})
+  if(NOT IS_DIRECTORY "${p}")
+    list(REMOVE_ITEM DRIVER_INCLUDE_DIRS "${p}")
+  endif()
+endforeach()
+list(REMOVE_DUPLICATES DRIVER_INCLUDE_DIRS)
+
+
 
 target_include_directories(unit_tests PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/unity/src
