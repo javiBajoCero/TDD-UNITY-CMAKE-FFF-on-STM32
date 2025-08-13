@@ -5,8 +5,7 @@ include(CTest)
 enable_testing()
 
 set(TEST_SOURCES
-    ${CMAKE_CURRENT_LIST_DIR}/test_ledDriver.c
-    ${CMAKE_CURRENT_LIST_DIR}/test_sanity.c
+    ${CMAKE_CURRENT_LIST_DIR}/Core/main.c
 
     ${CMAKE_CURRENT_LIST_DIR}/unity/src/unity.c
 )
