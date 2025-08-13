@@ -4,6 +4,12 @@ project(UnitTests C ASM)
 include(CTest)
 enable_testing()
 
+
+
+# 1) Create the executable target *first*. Name must match ${CMAKE_PROJECT_NAME}.
+#    Leave it empty so the CubeMX subdir can add its sources.
+add_executable(${CMAKE_PROJECT_NAME} "")
+
 # Clean up any bad/duplicate -T added elsewhere
 foreach(var CMAKE_EXE_LINKER_FLAGS CMAKE_C_LINK_FLAGS)
   if(DEFINED ${var})
@@ -28,10 +34,6 @@ target_link_options(UnitTests PRIVATE
   -Wl,--print-memory-usage
   -T${CMAKE_CURRENT_LIST_DIR}/../STM32U083xx_FLASH.ld
 )
-
-# 1) Create the executable target *first*. Name must match ${CMAKE_PROJECT_NAME}.
-#    Leave it empty so the CubeMX subdir can add its sources.
-add_executable(${CMAKE_PROJECT_NAME} "")
 
 # 2) Bring in the CubeMX cmake which will add HAL/CMSIS sources and link flags to our target.
 set(CUBEMX_DIR ${CMAKE_SOURCE_DIR}/../cmake/stm32cubemx)
