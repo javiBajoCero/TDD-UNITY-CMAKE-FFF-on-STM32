@@ -52,3 +52,12 @@ target_compile_features(${CMAKE_PROJECT_NAME} PRIVATE c_std_99)
 
 # Register the test exe (it will be the same ${CMAKE_PROJECT_NAME})
 add_test(NAME unit_tests COMMAND ${CMAKE_PROJECT_NAME})
+
+#temporary debug mesages
+message(STATUS "C_FLAGS='${CMAKE_C_FLAGS}'")
+message(STATUS "EXE_LINKER_FLAGS='${CMAKE_EXE_LINKER_FLAGS}'")
+get_target_property(_COPTS UnitTests COMPILE_OPTIONS)
+get_target_property(_LOPTS UnitTests LINK_OPTIONS)
+message(STATUS "UnitTests COMPILE_OPTIONS='${_COPTS}'")
+message(STATUS "UnitTests LINK_OPTIONS='${_LOPTS}'")
+
