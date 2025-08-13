@@ -34,7 +34,7 @@ jobs:
             -DCMAKE_TOOLCHAIN_FILE="$GITHUB_WORKSPACE/cmake/gcc-arm-none-eabi.cmake"
 
       - name: Build unit tests
-        run: cmake --build build-tests --target unit_tests --config Debug -j
+        run: cmake --build build-tests --target UnitTests --config Debug -j
 
 
   firmware-build:
