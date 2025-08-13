@@ -4,6 +4,31 @@ project(UnitTests C ASM)
 include(CTest)
 enable_testing()
 
+# Clean up any bad/duplicate -T added elsewhere
+foreach(var CMAKE_EXE_LINKER_FLAGS CMAKE_C_LINK_FLAGS)
+  if(DEFINED ${var})
+    string(REGEX REPLACE "(^| )-T[^ ]+" "" _cleaned "${${var}}")
+    set(${var} "${_cleaned}" CACHE STRING "" FORCE)
+  endif()
+endforeach()
+
+# Make sure CPU/Thumb flags are proper list items (no string glue)
+target_compile_options(UnitTests PRIVATE
+  -mcpu=cortex-m0plus
+  -mthumb
+)
+
+# Known-good link options as list items (note correct case: -Wl and -T)
+target_link_options(UnitTests PRIVATE
+  -mcpu=cortex-m0plus
+  -mthumb
+  --specs=nano.specs
+  -Wl,-Map=UnitTests.map
+  -Wl,--gc-sections
+  -Wl,--print-memory-usage
+  -T${CMAKE_CURRENT_LIST_DIR}/../STM32U083xx_FLASH.ld
+)
+
 # 1) Create the executable target *first*. Name must match ${CMAKE_PROJECT_NAME}.
 #    Leave it empty so the CubeMX subdir can add its sources.
 add_executable(${CMAKE_PROJECT_NAME} "")
