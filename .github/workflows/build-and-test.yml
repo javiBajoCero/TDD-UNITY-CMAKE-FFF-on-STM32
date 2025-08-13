@@ -28,7 +28,7 @@ jobs:
 
       - name: Configure unit tests (ARM)
         run: |
-          cmake -S tests -B build-tests -G "Unix Makefiles"\
+          cmake -S tests -B build-tests -- VERBOSE=1\
             -G "Unix Makefiles" \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_TOOLCHAIN_FILE="$GITHUB_WORKSPACE/cmake/gcc-arm-none-eabi.cmake"
