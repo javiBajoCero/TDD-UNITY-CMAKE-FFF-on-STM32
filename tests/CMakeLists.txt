@@ -16,8 +16,8 @@ add_executable(unit_tests ${TEST_SOURCES})
 target_include_directories(unit_tests PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/unity/src
     ${CMAKE_CURRENT_LIST_DIR}/fff
-    
-    ${CMAKE_SOURCE_DIR}/UserCore
+
+    ${CMAKE_CURRENT_LIST_DIR}/../UserCore
 )
 
 target_compile_features(unit_tests PRIVATE c_std_99)
