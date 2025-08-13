@@ -26,13 +26,16 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Configure unit tests
-        shell: bash
-        working-directory: ${{ github.workspace }}
-        run: cmake -S tests -B build-tests -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/cmake/gcc-arm-none-eabi.cmake"
+      - name: Configure unit tests (ARM)
+        run: |
+          cmake -S tests -B build-tests \
+            -G "Unix Makefiles" \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_TOOLCHAIN_FILE="$GITHUB_WORKSPACE/cmake/gcc-arm-none-eabi.cmake"
 
       - name: Build unit tests
-        run: cmake --build build-tests --target unit_tests --parallel
+        run: cmake --build build-tests --target unit_tests --config Debug -j
+
 
   firmware-build:
     name: STM32 Cross compiling (arm-none-eabi)
