@@ -41,6 +41,7 @@ target_link_options(UnitTests PRIVATE "-T${_ld}")
 # 5) Test-specific includes/defs
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/unity/src
+  ${CMAKE_CURRENT_LIST_DIR}/unity/extras/fixture/src
   ${CMAKE_CURRENT_LIST_DIR}/fff
   ${CMAKE_CURRENT_LIST_DIR}/Core
   ${CMAKE_CURRENT_LIST_DIR}
