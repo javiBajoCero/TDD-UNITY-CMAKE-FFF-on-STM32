@@ -4,5 +4,8 @@
 #include "main.h"
 
 // Add your function declarations and types here
+void ledDriverInit();
+void ledDriver_ledOn();
+void ledDriver_ledOff();
 
 #endif // LEDDRIVER_H

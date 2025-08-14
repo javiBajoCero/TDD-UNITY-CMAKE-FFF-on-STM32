@@ -10,7 +10,7 @@
 #include "ledDriver.h"
 #include "unity.h"
 #include "unity_fixture.h"
-#include "test_wolksvagen.h"
+
 /* Private typedef -----------------------------------------------------------*/
 
 /* Prototypes of test functions implemented in your test_*.c files */
@@ -61,7 +61,8 @@ int main(void)
 
 
 static void RunAllTests(void) {
-    RUN_TEST_GROUP(Wolksvagen);   // add more groups here
+    RUN_TEST_GROUP(Wolksvagen);   
+    RUN_TEST_GROUP(LEDDriver);   // add more groups here
 }
 
 
