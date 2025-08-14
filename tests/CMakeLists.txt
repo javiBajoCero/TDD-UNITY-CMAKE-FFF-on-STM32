@@ -27,6 +27,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/Core/main.c               # your Unity test runner main
   ${CMAKE_CURRENT_LIST_DIR}/unity_uart_output.c
   ${CMAKE_CURRENT_LIST_DIR}/unity/src/unity.c
+  ${CMAKE_CURRENT_LIST_DIR}/unity/extras/fixture/src/unity_fixture.c
+  ${CMAKE_CURRENT_LIST_DIR}/unity/extras/memory/src/unity_memory.c
   ${CMAKE_CURRENT_LIST_DIR}/Core/test_wolksvagen.c
 )
 

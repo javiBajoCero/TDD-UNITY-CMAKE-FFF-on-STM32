@@ -15,3 +15,8 @@ TEST(Wolksvagen, test_always_passes) {
 TEST(Wolksvagen, test_always_passes_2) {
     TEST_ASSERT_TRUE(1);
 }
+
+TEST_GROUP_RUNNER(Wolksvagen) {
+    RUN_TEST_CASE(Wolksvagen, test_always_passes);
+    RUN_TEST_CASE(Wolksvagen, test_always_passes_2);
+}
