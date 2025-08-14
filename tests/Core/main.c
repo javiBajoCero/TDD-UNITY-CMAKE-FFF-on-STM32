@@ -54,7 +54,7 @@ int main(void)
     UNITY_OUTPUT_CHAR('\n'); UNITY_OUTPUT_CHAR('\r');
 
     UNITY_BEGIN();
-    RUN_TEST(test_always_passes);
+    RUN_TEST_GROUP(Wolksvagen);
     // ...add more RUN_TEST()s or generate this list
     int failures = UNITY_END();
 
