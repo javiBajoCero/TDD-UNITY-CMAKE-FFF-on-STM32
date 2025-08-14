@@ -61,4 +61,4 @@ cmake_install.cmake
 
 # Build directory
 build/
-build-host/
+build-tests/

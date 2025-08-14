@@ -1,16 +1,36 @@
 {
   "version": "2.0.0",
   "tasks": [
+    /* ===== Firmware (ARM) ===== */
     {
-    "label": "flash-userapp",
-    "type": "shell",
-    "command": "STM32_Programmer_CLI",
-    "args": [
-        "-c", "port=SWD",
-        "-w", "build/Debug/${workspaceFolderBasename}.elf", // or .hex or .bin
-        "-rst"
-    ],
-    "problemMatcher": []
+      "label": "FW (ARM): configure",
+      "type": "shell",
+      "command": "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=\"${workspaceFolder}/cmake/gcc-arm-none-eabi.cmake\"",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "FW (ARM): build",
+      "type": "shell",
+      "command": "cmake --build build --parallel",
+      "dependsOn": "FW (ARM): configure",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": "$gcc"
+    },
+
+    /* ===== Unity tests (ARM) ===== */
+    {
+      "label": "Unity (ARM): configure",
+      "type": "shell",
+      "command": "cmake -S tests -B build-tests -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=\"${workspaceFolder}/cmake/gcc-arm-none-eabi.cmake\" -DCMAKE_VERBOSE_MAKEFILE=ON",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Unity (ARM): build",
+      "type": "shell",
+      "command": "cmake --build build-tests --parallel",
+      "dependsOn": "Unity (ARM): configure",
+      "group": "build",
+      "problemMatcher": "$gcc"
     }
   ]
 }
