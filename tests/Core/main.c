@@ -26,6 +26,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static void RunAllTests(void)<
 
 int main(void)
 {
@@ -58,6 +59,10 @@ int main(void)
     return UnityMain(2, argv, RunAllTests);
 }
 
+
+static void RunAllTests(void) {
+    RUN_TEST_GROUP(Wolksvagen);   // add more groups here
+}
 
 
 
