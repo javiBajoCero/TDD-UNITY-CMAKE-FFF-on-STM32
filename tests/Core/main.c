@@ -61,7 +61,7 @@ int main(void)
 
 
 static void RunAllTests(void) {
-    RUN_TEST_GROUP(Wolksvagen);   // add more groups here
+    TEST_GROUP_RUNNER(Wolksvagen);   // add more groups here
 }
 
 
