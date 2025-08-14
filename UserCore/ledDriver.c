@@ -6,6 +6,7 @@ GPIO_TypeDef* _green_port;
 void ledDriver_Init(uint16_t pin, GPIO_TypeDef* port){
   _green_pin = pin;
   _green_port = port;
+  HAL_GPIO_WritePin(_green_port, _green_pin, GPIO_PIN_RESET);//starts as off
 }
 
 void ledDriver_ledOn(){

@@ -13,6 +13,10 @@ TEST_SETUP(LEDDriver) {
 TEST_TEAR_DOWN(LEDDriver) {
 }
 
+TEST(LEDDriver, test_is_initially_off) {
+    TEST_ASSERT_TRUE(HAL_GPIO_ReadPin(GREEN_LED_GPIO_Port, GREEN_LED_Pin) == GPIO_PIN_RESET);
+}
+
 TEST(LEDDriver, test_led_on) {
     ledDriver_ledOn();
     TEST_ASSERT_TRUE(HAL_GPIO_ReadPin(GREEN_LED_GPIO_Port, GREEN_LED_Pin) == GPIO_PIN_SET);
@@ -36,6 +40,7 @@ TEST(LEDDriver, test_led_toggle) {
 
 
 TEST_GROUP_RUNNER(LEDDriver) {
+    RUN_TEST_CASE(LEDDriver, test_is_initially_off);
     RUN_TEST_CASE(LEDDriver, test_led_on);
     RUN_TEST_CASE(LEDDriver, test_led_off);
     RUN_TEST_CASE(LEDDriver, test_led_toggle);
