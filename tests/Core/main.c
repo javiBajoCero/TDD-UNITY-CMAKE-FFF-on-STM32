@@ -26,7 +26,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void RunAllTests(void)<
+static void RunAllTests(void);
 
 int main(void)
 {
