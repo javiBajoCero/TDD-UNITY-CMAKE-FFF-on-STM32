@@ -4,7 +4,7 @@
 #include "main.h"
 
 // Add your function declarations and types here
-void ledDriverInit();
+void ledDriver_Init(uint16_t pin, GPIO_TypeDef* port);
 void ledDriver_ledOn();
 void ledDriver_ledOff();
 

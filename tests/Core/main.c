@@ -46,12 +46,6 @@ int main(void)
   MX_GPIO_Init();
   MX_LPUART1_UART_Init();
 
-  /* Initialize leds */
-  BSP_LED_Init(LED_GREEN);
-
-  /* Initialize USER push-button, will be used to trigger an interrupt each time it's pressed.*/
-  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
-
     // Optional: small banner so your PC script knows tests started
     UNITY_OUTPUT_CHAR('\n'); UNITY_OUTPUT_CHAR('\r');
 

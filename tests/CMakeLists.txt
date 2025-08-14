@@ -32,6 +32,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 
   ${CMAKE_CURRENT_LIST_DIR}/Core/test_wolksvagen.c
   ${CMAKE_CURRENT_LIST_DIR}/Core/test_ledDriver.c
+  ${CMAKE_CURRENT_LIST_DIR}/../UserCore/ledDriver.c
 )
 
 # Remove any -T that points to tests/

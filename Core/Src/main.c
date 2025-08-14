@@ -89,19 +89,17 @@ int main(void)
   MX_GPIO_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  ledDriver_Init(GREEN_LED_Pin, GREEN_LED_GPIO_Port);
   /* USER CODE END 2 */
-
-  /* Initialize leds */
-  BSP_LED_Init(LED_GREEN);
-
-  /* Initialize USER push-button, will be used to trigger an interrupt each time it's pressed.*/
-  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    ledDriver_ledOn();
+    HAL_Delay(500); // Turn LED on for 500 ms
+    ledDriver_ledOff();
+    HAL_Delay(500); // Turn LED off for 500 ms
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
