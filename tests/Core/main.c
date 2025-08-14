@@ -9,6 +9,7 @@
 
 #include "ledDriver.h"
 #include "unity.h"
+#include "unity_fixture.h"
 #include "test_wolksvagen.h"
 /* Private typedef -----------------------------------------------------------*/
 
