@@ -19,7 +19,7 @@
 
 
 /* Private macro -------------------------------------------------------------*/
-extern int UnityVerbose;  // Declaration so the linker can find the real variable
+
 
 /* Private variables ---------------------------------------------------------*/
 
@@ -53,17 +53,9 @@ int main(void)
 
     // Optional: small banner so your PC script knows tests started
     UNITY_OUTPUT_CHAR('\n'); UNITY_OUTPUT_CHAR('\r');
-    UnityVerbose = 1; // Force verbose test output
 
-    UNITY_BEGIN();
-    RUN_TEST_GROUP(Wolksvagen);
-    // ...add more RUN_TEST()s or generate this list
-    int failures = UNITY_END();
-
-    // Optionally blink or breakpoint on failures
-    for(;;) { /* stay here; or NVIC_SystemReset(); */ }
-
-    return failures;
+    const char* argv[] = {"UnitTests", "-v"}; // verbose
+    return UnityMain(2, argv, RunAllTests);
 }
 
 
