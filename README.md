@@ -1,6 +1,7 @@
 # TDD-UNITY-CMAKE-FFF-on-STM32
 
-A guide to unit testing C code for STM32 using VSCode, CMake, Unity, FFF, and GitHub Actions. Both production and test builds are automated (GithubActions) on every push to `main`.
+A code pool for my learnings about unit testing C code on target for STM32 using VSCode, CMake, Unity, FFF, and GitHub Actions.      
+Both production and test builds (.elf) are automated (GithubActions) on every push to `main` and could be found stored as artifacts.
 
 ## Folder Structure
 - `Core/Src/` — Main application source code
