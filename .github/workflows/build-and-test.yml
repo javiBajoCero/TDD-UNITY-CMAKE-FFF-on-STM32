@@ -14,7 +14,7 @@ permissions:
     
 jobs:
   unit-tests:
-    name: Unit tests (Unity + FFF run on linux C)
+    name: Unit tests crosscompiled for stm32 (Unity + FFF)
     runs-on: ubuntu-latest
 
     container:
@@ -47,7 +47,7 @@ jobs:
 
 
   firmware-build:
-    name: STM32 Cross compiling (arm-none-eabi)
+    name: Main Code crosscompiling for stm32 (arm-none-eabi)
     runs-on: ubuntu-latest
 
     container:
@@ -83,7 +83,7 @@ jobs:
       - name: Upload firmware artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-${{ github.run_number }}
+          name: Firmware-${{ github.event.repository.name }}-${{ github.run_number }}
           path: |
             build/*.elf
           if-no-files-found: error
